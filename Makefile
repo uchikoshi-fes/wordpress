@@ -9,11 +9,9 @@ env:
 	$(PKG_MAN) install -y $(ENV_PKG)
 
 vim:
-	mkdir -p ~/local/src ~/local/bin
-	git clone https://github.com/vim/vim.git ~/local/src/vim
-	local/src/vim/configure --prefix=$$HOME --enable-multibyte
-	make -C ~/local/src/vim
-	make -C ~/local/src/vim install
+	mkdir -p ~/local/src
+	mkdir -p ~/local/bin
+	bash install_vim.sh ~/local/src ~/local/bin
 
 mysql:
 	@echo "mysql-server mysql-server/root_password password $(MYSQL_PASSWD)" | debconf-set-selections
