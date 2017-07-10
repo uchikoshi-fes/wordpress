@@ -1,8 +1,7 @@
-FROM ubuntu:16.04
+FROM lexaguskov/freebsd
 MAINTAINER sksat
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get -y upgrade
-RUN apt-get install -y make php apache2 vim git curl pwgen apt-utils
-RUN mkdir script
-COPY ./ script/
-RUN make -C script mysql && make -C script wordpress
+RUN echo nameserver 8.8.8.8 >> /etc/resolv.conf
+RUN pkg update
+RUN mkdir wptol
+COPY ./ wptol/
+RUN make -C wptol mysql && make -C wptol wordpress
