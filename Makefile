@@ -9,13 +9,11 @@ env:
 	$(PKG_MAN) install -y $(ENV_PKG)
 
 vim:
-	cd ~
-	mkdir -p local/{bin,src}
-	cd local/src
-	git clone https://github.com/vim/vim.git
-	cd vim/src
-	./configure --prefix=$$HOME --enable-multibyte
-	make && make install
+	mkdir -p ~/local/src ~/local/bin
+	git clone https://github.com/vim/vim.git ~/local/src/vim
+	local/src/vim/configure --prefix=$$HOME --enable-multibyte
+	make -C ~/local/src/vim
+	make -C ~/local/src/vim install
 
 mysql:
 	@echo "mysql-server mysql-server/root_password password $(MYSQL_PASSWD)" | debconf-set-selections
