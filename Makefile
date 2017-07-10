@@ -3,13 +3,21 @@ ENV_PKG := php apache2
 ENV_PKG += vim git curl pwgen apt-utils
 
 WP_DIR  := /wordpress
-MYSQL_PASSWD := password
+MYSQL_PASSWD := `echo password`
 
 env:
 	$(PKG_MAN) install -y $(ENV_PKG)
 
+vim:
+	cd ~
+	mkdir -p local/{bin,src}
+	cd local/src
+	git clone https://github.com/vim/vim.git
+	cd vim/src
+	./configure --prefix=$$HOME --enable-multibyte
+	make && make install
+
 mysql:
-	$(eval MYSQL_PASSWD := $(shell pwgen -s 12 1))
 	@echo "mysql-server mysql-server/root_password password $(MYSQL_PASSWD)" | debconf-set-selections
 	@echo "mysql-server mysql-server/root_password_again password $(MYSQL_PASSWD)" | debconf-set-selections
 	$(PKG_MAN) install -y mysql-server
@@ -20,6 +28,7 @@ mysql:
 
 
 wordpress:
-	git clone --depth=1 https://github.com/WordPress/WordPress.git $(WP_DIR)
-	chown -R www-data:www-data $(WP_DIR)/wp-content /var/www/html
+	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+	php wp-cli.phar --info
+	chmod +x wp-cli.phar /usr/local/bin/wp
 
